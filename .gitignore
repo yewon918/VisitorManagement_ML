@@ -1,0 +1,7 @@
+# 데이터셋 사진
+*.jpg
+# 주피터노트북 기본 폴더
+*.idea
+*.ipynb_checkpoints
+
+__pycache__
