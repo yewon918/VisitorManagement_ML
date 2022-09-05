@@ -43,3 +43,12 @@ zolzak: 모델 초기 파일
 3) http://127.0.0.1:5000/ 확인
 
 > 개발서버 실행 시, set FLASK_DEBUG=true 이후 run flask
+
+
+---------
+
+## 파이참 interpreter 설정
+
+파이참에서
+
+File > Settings > Project:각자 프로젝트 > Python Interpreter > 아나콘다 Python 3.8(py38) 선택 > Ok
