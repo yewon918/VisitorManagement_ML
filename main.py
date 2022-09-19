@@ -1,29 +1,6 @@
 # https://wings2pc.tistory.com/entry/%EC%9B%B9-%EC%95%B1%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%94%8C%EB%9D%BC%EC%8A%A4%ED%81%ACPython-Flask?category=777829
-# from flask import Flask, request
-#
-# app = Flask(__name__)    # flask를 app에 넘겨서 전역객체로 사용. 인스턴스 생성
-# # 패키지 형태로 사용할 경우 패키지 이름을 __name__ 대신 직접 써줘야함. __name__은 단일모듈
-#
-# @app.route("/")
-# def hello():
-#     return 'hello'
-#
-# @app.route('/method', methods=['GET', 'POST'])
-# def method():
-#     if request.method == 'GET':
-#         return "GET으로 전달"
-#     else:
-#         return "POST로 전달"
-#
-# if __name__ == '__main__':   # name은 main
-#     app.run(debug=True)
-
-#######################
 import flask
-from flask import Flask, request, render_template
-import joblib
-import numpy as np
-from scipy import misc
+from flask import Flask, request
 import cv2
 
 
@@ -39,14 +16,16 @@ def index():
 # 데이터 예측 처리
 visit_list=[]
 tmp = []
-@app.route('/predict', methods=['POST', 'GET'])     # post인 것 같음
+@app.route('/predict', methods=['POST', 'GET'])
+
+########################## 카메라 켜서 예측하는 부분 #################################
 def make_prediction():
     if request.method == 'POST':
 
         # 업로드 파일 처리 분기  # 카메라로 이 부분을 받아오면 될거 같음
 
         recognizer = cv2.face.LBPHFaceRecognizer_create()
-        recognizer.read('./trainer/trainer.yml')
+        recognizer.read('./trainer/trainer.pkl')           # 학습된 모델을 불러옴
         cascadePath = 'haarcascade_frontalface_default.xml'
         faceCascade = cv2.CascadeClassifier(
             r"C:\Users\Yewon\anaconda3\envs\py38\Library\etc\haarcascades\haarcascade_frontalface_default.xml")
@@ -101,8 +80,5 @@ def make_prediction():
     return "완료"    # db로 보내줄 순 없을까?
 
 if __name__ == '__main__':
-    # 모델 로드
-    # ml/model.py 선 실행 후 생성
-    model = joblib.load('./model/face_recognition.pkl')
     # Flask 서비스 스타트
     app.run(host='0.0.0.0', port=8000, debug=True)
