@@ -1,16 +1,19 @@
 # https://wings2pc.tistory.com/entry/%EC%9B%B9-%EC%95%B1%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%94%8C%EB%9D%BC%EC%8A%A4%ED%81%ACPython-Flask?category=777829
+# https://go-guma.tistory.com/9
 import flask
-from flask import Flask, request
+from flask import Flask, request, render_template
 import cv2
 
 
 app = Flask(__name__)
-
 # 메인페이지 - url 요청시 기본 index.html로 이동 (렌더링)
-@app.route("/")
-@app.route("/index")
+@app.route("/", methods=['POST', 'GET'])
+def cam_main():
+    return render_template('camera.html')
+
+@app.route("/index")    # 변경가능, 임시
 def index():
-    return flask.render_template('index.html')
+    return flask.render_template('done.html')
 
 # 데이터
 # 데이터 예측 처리
@@ -39,7 +42,13 @@ def make_prediction():
         minW = 0.1 * cam.get(cv2.CAP_PROP_FRAME_WIDTH)
         minH = 0.1 * cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
-        while True:
+        start = 100
+        while start:
+
+            # DB내에서 넘어온 사용자 리스트에 있는지 확인할때까지만 loop 돌리도록 코드 수정 필요
+            # 이후 조건문
+
+            start -= 1
             ret, img = cam.read()
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -58,7 +67,7 @@ def make_prediction():
                     put_name = id
                     # name을 거치지 않고 id를 출력하게 함. 이후 출력된 id는 db로 보내야함
                 else:
-                    put_name = -55
+                    put_name = "확인되지 않은 방문자"
 
                 confidence = "  {0}%".format(round(100 - confidence))
 
@@ -70,6 +79,8 @@ def make_prediction():
             cv2.imshow('camera', img)
             if cv2.waitKey(1) > 0: break
 
+            # while문 내에서 db로 방문자 전송, 중복시 전송하지 않도록 코드 짜기
+
         visit_list.append(set(tmp))
 
         print("\n [INFO] Exiting Program and cleanup stuff")
@@ -77,7 +88,8 @@ def make_prediction():
         cv2.destroyAllWindows()
         print(visit_list)
 
-    return "완료"    # db로 보내줄 순 없을까?
+    return flask.render_template('done.html')
+
 
 if __name__ == '__main__':
     # Flask 서비스 스타트
