@@ -42,7 +42,7 @@ def make_prediction():
         minW = 0.1 * cam.get(cv2.CAP_PROP_FRAME_WIDTH)
         minH = 0.1 * cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
-        start = 100
+        start = 100000
         while start:
 
             # DB내에서 넘어온 사용자 리스트에 있는지 확인할때까지만 loop 돌리도록 코드 수정 필요
@@ -93,4 +93,6 @@ def make_prediction():
 
 if __name__ == '__main__':
     # Flask 서비스 스타트
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    # app.run(host='http://ferrydraw.dothome.co.kr/', port=3306, debug=True)
+    app.run(host='localhost', port=3306, debug=True)
+
