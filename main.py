@@ -9,7 +9,7 @@ app = Flask(__name__)
 # 메인페이지 - url 요청시 기본 index.html로 이동 (렌더링)
 @app.route("/", methods=['POST', 'GET'])
 def cam_main():
-    return render_template('camera.html')
+    return '완료', render_template('camera.html')
 
 @app.route("/index")    # 변경가능, 임시
 def index():
@@ -94,5 +94,5 @@ def make_prediction():
 if __name__ == '__main__':
     # Flask 서비스 스타트
     # app.run(host='http://ferrydraw.dothome.co.kr/', port=3306, debug=True)
-    app.run(host='localhost', port=3306, debug=True)
+    app.run(host='localhost', port=5000, debug=True)
 
