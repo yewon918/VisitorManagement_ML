@@ -1,6 +1,6 @@
 # https://wings2pc.tistory.com/entry/%EC%9B%B9-%EC%95%B1%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%94%8C%EB%9D%BC%EC%8A%A4%ED%81%ACPython-Flask?category=777829
 # https://go-guma.tistory.com/9
-import flask
+# import flask
 from flask import Flask, request, render_template
 import cv2
 
@@ -96,6 +96,5 @@ def make_prediction():
 
 if __name__ == '__main__':
     # Flask 서비스 스타트
-    # app.run(host='http://ferrydraw.dothome.co.kr/', port=3306, debug=True)
     app.run(host='localhost', port=5000, debug=True)
 
