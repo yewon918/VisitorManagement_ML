@@ -7,9 +7,12 @@ import cv2
 
 app = Flask(__name__)
 # 메인페이지 - url 요청시 기본 index.html로 이동 (렌더링)
-@app.route("/", methods=['POST', 'GET'])
+# @app.route("/", methods=['POST', 'GET'])
+@app.route("/")
 def cam_main():
-    return '완료', render_template('camera.html')
+    # return '완료', render_template('camera.html')
+    return '완료'
+
 
 @app.route("/index")    # 변경가능, 임시
 def index():
