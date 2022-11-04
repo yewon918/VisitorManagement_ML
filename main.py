@@ -1,8 +1,9 @@
 # https://wings2pc.tistory.com/entry/%EC%9B%B9-%EC%95%B1%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%94%8C%EB%9D%BC%EC%8A%A4%ED%81%ACPython-Flask?category=777829
 # https://go-guma.tistory.com/9
-# import flask
+import flask
 from flask import Flask, request, render_template
 import cv2
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -10,8 +11,7 @@ app = Flask(__name__)
 # @app.route("/", methods=['POST', 'GET'])
 @app.route("/")
 def cam_main():
-    # return '완료', render_template('camera.html')
-    return '완료'
+    return render_template('camera.html')
 
 
 @app.route("/index")    # 변경가능, 임시
@@ -45,13 +45,13 @@ def make_prediction():
         minW = 0.1 * cam.get(cv2.CAP_PROP_FRAME_WIDTH)
         minH = 0.1 * cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
-        start = 100000
-        while start:
+
+        while True:
 
             # DB내에서 넘어온 사용자 리스트에 있는지 확인할때까지만 loop 돌리도록 코드 수정 필요
             # 이후 조건문
 
-            start -= 1
+            # start -= 1
             ret, img = cam.read()
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -63,19 +63,21 @@ def make_prediction():
             )
 
             for (x, y, w, h) in faces:
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 153, 103), 2)  #bgr
                 id, confidence = recognizer.predict(gray[y:y + h, x:x + w])
+                now = datetime.now()
 
-                if confidence < 55:
+                if confidence < 60:
                     put_name = id
                     # name을 거치지 않고 id를 출력하게 함. 이후 출력된 id는 db로 보내야함
                 else:
                     put_name = "확인되지 않은 방문자"
 
+
                 confidence = "  {0}%".format(round(100 - confidence))
 
                 cv2.putText(img, str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
-                cv2.putText(img, str(confidence), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
+                cv2.putText(img, "Confidence"+str(confidence), (x + 5, y + h - 5), font, 1, (255, 255, 255), 1)
 
                 tmp.append(id)
 
@@ -91,7 +93,31 @@ def make_prediction():
         cv2.destroyAllWindows()
         print(visit_list)
 
-    return flask.render_template('done.html')
+    return flask.render_template('done.html', d1=put_name, d2=now)
+    # return'''<!DOCTYPE HTML><html>
+    # <head>
+    # <meta charset="UTF-8">
+    #     <link rel="stylesheet" href="./static/camera.css" type="text/css" media="all" />
+    # </head>
+    # <body>
+    # <div id = 'conhead' style = "text-align:center" "margin-top=50%";>
+    #         <img src = '../static/logo.png', alt = "logo", width="350", height="200", margin-top="30%">
+    #     </div>
+    # <div id = 'container'>
+    # <p class='text'> 방문자 확인 완료</p>
+    # <javascript>
+    #
+    # </javascript>
+    # <p>20180님이 방문하셨습니다</p>
+    # <form id="upload" action="/" method="POST" enctype="multipart/form-data" style='text-align:center', 'border-top-right-radius: 5px'>
+    #     <div id='btndiv'>
+    #         <button id="btn">Back to Home</button>
+    #     </div>
+    # </form>
+    # </div></body>
+    # </html>
+    # '''
+
 
 
 if __name__ == '__main__':
